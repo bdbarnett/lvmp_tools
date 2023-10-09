@@ -26,7 +26,7 @@ class RoundView(lv.obj):
             self.set_size(cont_diam, cont_diam) # Resize to zoomed size
             self.align(lv.ALIGN.TOP_LEFT, 0, 0)
             self.update_layout()
-            parent.scroll_to((self.get_width() - child_diam) // 2, 0, lv.ANIM.ON)
+            parent.scroll_to(((self.get_width() - child_diam) // 2) - ((parent.get_width()-child_diam) // 2), 0, lv.ANIM.ON)
         else:
             circum_rad, child_diam, cont_diam = self.calc_sizes(diam, max([4, num_items]), diam / 30)
         self.child_size = (child_diam, child_diam)
@@ -79,5 +79,8 @@ class FlexFlowView(lv.obj):
         self.set_style_bg_opa(lv.OPA._0, 0)
         self.set_style_pad_all(0, 0)
         self.set_size(lv.pct(100), lv.pct(100))
+        self.add_flag(lv.obj.FLAG.SCROLL_ONE)
+        self.set_scroll_snap_x(lv.SCROLL_SNAP.CENTER)
+        self.set_scroll_snap_y(lv.SCROLL_SNAP.CENTER)
         self.center()
         self.update_layout()

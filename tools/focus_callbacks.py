@@ -19,12 +19,16 @@ def pan_focus_cb(group, cont, scroll_gp=False, **args):
     parent = move_to_obj.get_parent()
     grandparent = parent.get_parent()
 
-    position = (move_to_obj.get_x(), move_to_obj.get_y())
+
     if scroll_gp == True:
-        # ZoomedMenuPanels and ZoomedLivePanels scroll the grandparent
+        # ZRoundPanels and CircularLivePanels scroll the grandparent
+        x_offset = (grandparent.get_width() - move_to_obj.get_width()) // 2
+        y_offset = (grandparent.get_height() - move_to_obj.get_height()) // 2
+        position = (move_to_obj.get_x() - x_offset, move_to_obj.get_y() - y_offset)
         grandparent.scroll_to(*position, lv.ANIM.ON)
     else:
         # FlexFlowLivePanels scroll the parent
+        position = (move_to_obj.get_x(), move_to_obj.get_y())
         parent.scroll_to(*position, lv.ANIM.ON)
 
 def rotate_focus_cb(group, cont, exclude=[], **args):

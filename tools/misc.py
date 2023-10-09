@@ -31,12 +31,12 @@ def make_square(obj):
     elif w > h:
         obj.set_width(h)
 
-def obj_details(obj, details="", to_console=True):
+def obj_details(obj, details=""):
     details += f"{obj}; "
     if obj is not None:
         details += f"Size {obj.get_width(), obj.get_height()}; "
         details += f"Pos {obj.get_x(), obj.get_y()}; "
         details += f"Scroll x, y {obj.get_scroll_x(), obj.get_scroll_y()}; "
-        if to_console: print(details)
+        print(details)
     return details
 

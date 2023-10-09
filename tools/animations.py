@@ -114,40 +114,34 @@ def move_xy(obj, start_pos, dest_pos, dur=500, path_cb=None, ready_cb=None):
     animate_y.start()
 
 
-def spin_grow(obj, start_params, dest_params, dur=500, path_cb=None, del_obj=False):
-    x1, y1, start_width, start_height = start_params
-    x2, y2, dest_width, dest_height = dest_params
+def spin_grow(obj, start_area, dest_area, shrink=False, dur=500, path_cb=None, del_obj=False):
 
-    if start_width < dest_width:
-        zoom_start = 256 * start_width // dest_width
-        zoom_end = 256
+    if shrink:
+        zoom_start = lv.ZOOM_NONE
+        zoom_end = 0
+        start_x = start_area.x1
+        start_y = start_area.y1
+        dest_x = dest_area.x1 - ((start_area.get_width() - dest_area.get_width()) // 2)
+        dest_y = dest_area.y1 - ((start_area.get_height() - dest_area.get_height()) // 2)
     else:
-        zoom_start = 256
-        zoom_end = 256 * dest_width // start_width
+        zoom_start = 0
+        zoom_end = lv.ZOOM_NONE
+        start_x = start_area.x1 - ((dest_area.get_width() - start_area.get_width()) // 2)
+        start_y = start_area.y1 - ((dest_area.get_height() - start_area.get_height()) // 2)
+        dest_x = dest_area.x1
+        dest_y = dest_area.y1
 
     animate_x = Animation(
-        obj, (lambda a, val: obj.set_x(val)), x1, x2, dur, path_cb=path_cb
+        obj, (lambda a, val: obj.set_x(val)), start_x, dest_x, dur, path_cb=path_cb
     )
     animate_y = Animation(
-        obj, (lambda a, val: obj.set_y(val)), y1, y2, dur, path_cb=path_cb
+        obj, (lambda a, val: obj.set_y(val)), start_y, dest_y, dur, path_cb=path_cb
     )
     animate_zoom = Animation(
-        obj,
-        (lambda a, val: obj.set_style_transform_zoom(val, 0)),
-        zoom_start,
-        zoom_end,
-        dur,
-        path_cb=path_cb,
+        obj, (lambda a, val: obj.set_style_transform_zoom(val, 0)), zoom_start, zoom_end, dur, path_cb=path_cb,
     )
     animate_angle = Animation(
-        obj,
-        (lambda a, val: obj.set_style_transform_angle(val, 0)),
-        0,
-        3600,
-        dur + 100,
-        path_cb=path_cb,
-        del_anims=True,
-        del_obj=del_obj,
+        obj, (lambda a, val: obj.set_style_transform_angle(val, 0)), 0, 3600, dur + 100, path_cb=path_cb, del_anims=True, del_obj=del_obj,
     )
 
     animate_x.start()
